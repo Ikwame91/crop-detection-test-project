@@ -152,23 +152,25 @@ export const ImageUpload = () => {
   const [isLoading, setIsloading] = useState(false);
   let confidence = 0;
 
-  const sendFile = async () => {
-    if (image) {
-      let formData = new FormData();
-      formData.append("file", selectedFile);
+ const sendFile = async () => {
+  if (image && selectedFile) {
+    let formData = new FormData();
+    formData.append("file", selectedFile);
+    try {
       let res = await axios({
         method: "post",
-        url: process.env.REACT_APP_API_URL || "http://localhost:5000/api/potato",
-        // url: process.env.REACT_APP_API_URL,
+        url: process.env.REACT_APP_API_URL || "http://localhost:8001/predict",
         data: formData,
       });
       if (res.status === 200) {
         setData(res.data);
       }
-      setIsloading(false);
+    } catch (error) {
+      console.error("Error sending file:", error);
     }
+    setIsloading(false);
   }
-
+};
   const clearData = () => {
     setData(null);
     setImage(false);
